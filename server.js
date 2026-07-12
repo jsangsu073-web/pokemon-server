@@ -55,7 +55,11 @@ async function startGameLoop() {
 
             // [4] Busted!
             await db.ref('game').set({ status: 'crashed', crashPoint: crashPt });
-            console.log(`펑! 폭발 완료.`);
+            
+            // 👇 이 한 줄을 새로 추가해 주세요! (기록 저장)
+            await db.ref('history').push({ crashPoint: crashPt, timestamp: Date.now() });
+
+            console.log(`펑! 폭발 완료. 기록 저장됨.`);
             
             // 유저들이 결과를 볼 수 있게 4초 대기
             await sleep(4000);
