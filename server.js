@@ -18,16 +18,32 @@ app.get('/', (req, res) => {
   res.send('포켓몬 그래프 24시간 자동 봇이 정상 작동 중입니다! ⚡');
 });
 
-// 확률 계산 함수
+// 확률 계산 함수 (소수점 확률 완벽 적용)
 function calculateCrashPoint() {
-    let r = Math.floor(Math.random() * 100) + 1;
-    if (r <= 30) return 1.00;
-    if (r <= 60) return parseFloat((Math.random() * (1.50 - 1.01) + 1.01).toFixed(2));
-    if (r <= 80) return parseFloat((Math.random() * (2.00 - 1.51) + 1.51).toFixed(2));
-    if (r <= 95) return parseFloat((Math.random() * (5.00 - 2.01) + 2.01).toFixed(2));
-    if (r <= 98) return parseFloat((Math.random() * (10.00 - 5.01) + 5.01).toFixed(2));
-    let extreme_random = Math.random() * 0.99;
-    return parseFloat((10.01 + (1.0 / (1.0 - extreme_random))).toFixed(2));
+    // 0.00부터 99.999... 까지의 정밀한 난수를 생성합니다.
+    let r = Math.random() * 100; 
+    
+    // 확률표 (누적 방식으로 계산됨)
+    if (r <= 15) {
+        return 1.00; // 15% 확률: 즉시 폭발
+    } 
+    else if (r <= 45) { 
+        return parseFloat((Math.random() * (1.50 - 1.01) + 1.01).toFixed(2)); // 30% 확률 (20 + 30)
+    } 
+    else if (r <= 67) { 
+        return parseFloat((Math.random() * (2.00 - 1.51) + 1.51).toFixed(2)); // 22% 확률 (50 + 17)
+    } 
+    else if (r <= 95) { 
+        return parseFloat((Math.random() * (5.00 - 2.01) + 2.01).toFixed(2)); // 28% 확률 (67 + 28)
+    } 
+    else if (r <= 99.5) { 
+        return parseFloat((Math.random() * (10.00 - 5.01) + 5.01).toFixed(2)); // 4.5% 확률 (95 + 4.5)
+    } 
+    else {
+        // 나머지 0.5% 확률: 10.01 이상 잭팟 (99.5 + 0.5)
+        let extreme_random = Math.random() * 0.99;
+        return parseFloat((10.01 + (1.0 / (1.0 - extreme_random))).toFixed(2));
+    }
 }
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
