@@ -72,10 +72,18 @@ async function startGameLoop() {
             // [4] Busted!
             await db.ref('game').set({ status: 'crashed', crashPoint: crashPt });
             
-            // 👇 이 한 줄을 새로 추가해 주세요! (기록 저장)
-            await db.ref('history').push({ crashPoint: crashPt, timestamp: Date.now() });
+          // ⭐ 한국 시간 텍스트 생성
+const koreanTimeStr = new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' });
 
-            console.log(`펑! 폭발 완료. 기록 저장됨.`);
+// 기존 코드에 time 필드를 추가하여 덮어쓰기
+await db.ref('history').push({ 
+    crashPoint: crashPt, 
+    time: koreanTimeStr,      // 👈 추가된 한국 시간
+    timestamp: Date.now() 
+});
+
+console.log(`펑! 폭발 완료 (${crashPt}x). 기록 저장됨: ${koreanTimeStr}`);
+
             
             // 유저들이 결과를 볼 수 있게 4초 대기
             await sleep(4000);
